@@ -5,6 +5,8 @@ NOTE: This script is pointless without:
 
   https://github.com/hp6000x/backup.sh
   
+  https://github.com/hp6000x/docsbackup
+  
 and
 
   https://github.com/hp6000x/enable_avscan
