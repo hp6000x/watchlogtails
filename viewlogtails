@@ -1,0 +1,32 @@
+#!/bin/bash
+#Display the tail output of backup and antivirus scan log files. Use with watch for joy and delight.
+echo "Backup"
+tail -n 7 /var/log/backup.log
+echo
+echo "Monthly AV Scan"
+tail -n 4 /var/log/antivirus_scan-monthly.log
+echo
+echo "Weekly AV Scan"
+tail -n 14 /var/log/antivirus_scan-weekly.log
+echo
+echo "Daily AV Scan"
+tail -n 4 /var/log/antivirus_scan-daily.log
+echo
+echo "Quarantine"
+if [[ -e /tmp/qlist-$USER.txt ]]; then
+  rm /tmp/qlist-$USER.txt
+fi
+touch /tmp/qlist-$USER.txt
+counter=0
+pushd /quarantine > /dev/null
+for a in *; do
+  if [[ -e "$a" ]]; then
+    echo "$a" >> /tmp/qlist-$USER.txt
+    counter=$((counter+1))
+  fi
+done
+popd > /dev/null
+s="s"
+if [[ $counter -eq 1 ]]; then s=""; fi
+echo "$counter file$s in quarantine" >> /tmp/qlist-$USER.txt
+tail -n 5 /tmp/qlist-$USER.txt

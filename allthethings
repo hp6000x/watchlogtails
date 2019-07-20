@@ -1,0 +1,22 @@
+#!/bin/bash
+#run me to reinstall backup and virus scan scripts and check that they are enabled and functioning
+echo "Installing daily backup script..."
+/pub/scripts/backup.sh -i
+"echo Installing AV scan scripts..."
+/pub/scripts/enable_avscan
+echo "Installing weekly docs backup script..."
+/pub/scripts/enable_docs_backup 
+echo "Launching daily backup script..."
+sudo /etc/cron.daily/backup &
+echo "Launching documents backup scripts"
+for a in /etc/cron.weekly/docs-backup-*; do 
+  if [[ -e "$a" ]]; then
+    sudo "$a" &
+  fi
+done
+for i in daily weekly monthly; do
+  echo "Launching $i AV scan script..."
+  sudo /etc/cron.$i/antivirus_scan &
+done
+echo "Done. Now run watchlogtails to view output"
+exit 0
