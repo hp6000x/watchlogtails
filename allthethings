@@ -1,11 +1,49 @@
 #!/bin/bash
 #run me to reinstall backup and virus scan scripts and check that they are enabled and functioning
+if [[ ! -d "$HOME/bin" ]]; then
+  echo "Creating $HOME/bin."
+  mkdir "$HOME/bin"
+  echo "export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
+  echo "You need to relog for changes to \$PATH to take effect." 
+fi
+
+pushd "$HOME/bin" > /dev/null
+
+if ! (which backup.sh > /dev/null); then
+  echo "Getting backup.sh from github" 
+  wget "https://github.com/hp6000x/backup.sh/blob/master/backup.sh"
+  chmod 755 backup.sh
+  echo "You need to edit $HOME/bin/backup.sh to suit your system. Go to https://github.com/hp6000x/backup.sh for details."
+  exit
+fi
+
+if ! (which enable_avscan > /dev/null); then
+  echo "Getting enable_avscan from github"
+  wget "https://github.com/hp6000x/enable_avscan/blob/master/enable_avscan"
+  chmod 755 enable_avscan
+fi
+
+if ! (which enable_docs_backup > /dev/null); then
+  echo "Getting enable_docs_backup from github"
+  wget "https://github.com/hp6000x/docsbackup/blob/master/enable_docs_backup"
+  chmod 755 enable_docs_backup
+fi
+
+if ! (which watchlogtails > /dev/null); then
+  echo "Getting watchlogtails from github"
+  wget "https://github.com/hp6000x/watchlogtails/blob/master/viewlogtails"
+  wget "https://github.com/hp6000x/watchlogtails/blob/master/watchlogtails"
+fi  
+
+popd > /dev/null
+
 echo "Installing daily backup script..."
-/pub/scripts/backup.sh -i
+backup.sh -i
 "echo Installing AV scan scripts..."
-/pub/scripts/enable_avscan
+enable_avscan
 echo "Installing weekly docs backup script..."
-/pub/scripts/enable_docs_backup 
+enable_docs_backup 
+
 echo "Launching daily backup script..."
 sudo /etc/cron.daily/backup &
 echo "Launching documents backup scripts"
@@ -18,5 +56,8 @@ for i in daily weekly monthly; do
   echo "Launching $i AV scan script..."
   sudo /etc/cron.$i/antivirus_scan &
 done
-echo "Done. Now run watchlogtails to view output"
+echo "Done. Now running watchlogtails to view output"
+echo "Hit ENTER to continue..."
+read dummy
+watchlogtails
 exit 0
