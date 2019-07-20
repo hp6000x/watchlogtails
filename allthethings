@@ -3,7 +3,9 @@
 if [[ ! -d "$HOME/bin" ]]; then
   echo "Creating $HOME/bin."
   mkdir "$HOME/bin"
-  echo "export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
+  echo "if ( ! echo \"\$PATH\" | grep -q \"/pub/scripts\" ); then" >> "$HOME/.bashrc"
+  echo "  export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
+  echo "fi" >> "$HOME/.bashrc"
   echo "You need to relog for changes to \$PATH to take effect." 
 fi
 
@@ -32,7 +34,9 @@ fi
 if ! (which watchlogtails > /dev/null); then
   echo "Getting watchlogtails from github"
   wget "https://github.com/hp6000x/watchlogtails/blob/master/viewlogtails"
+  chmod 755 viewlogtails
   wget "https://github.com/hp6000x/watchlogtails/blob/master/watchlogtails"
+  chmod 755 watchlogtails
 fi  
 
 popd > /dev/null
