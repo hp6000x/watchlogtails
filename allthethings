@@ -6,7 +6,8 @@ if [[ ! -d "$HOME/bin" ]]; then
   echo "if ( ! echo \"\$PATH\" | grep -q \"/pub/scripts\" ); then" >> "$HOME/.bashrc"
   echo "  export PATH=\"\$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
   echo "fi" >> "$HOME/.bashrc"
-  echo "You need to relog for changes to \$PATH to take effect." 
+  echo "You need to relog for changes to \$PATH to take effect. Exiting." 
+  exit 1
 fi
 
 pushd "$HOME/bin" > /dev/null
