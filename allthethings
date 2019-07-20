@@ -44,7 +44,7 @@ popd > /dev/null
 
 echo "Installing daily backup script..."
 backup.sh -i
-"echo Installing AV scan scripts..."
+echo "Installing AV scan scripts..."
 enable_avscan
 echo "Installing weekly docs backup script..."
 enable_docs_backup 
