@@ -1,8 +1,11 @@
 #!/bin/bash
 #Display the tail output of backup and antivirus scan log files. Use with watch for joy and delight.
 echo "Backup"
-tail -n 7 /var/log/backup.log
-echo
+for filename in /var/log/backup*.log; do
+	echo "$filename"
+	tail -n 7 "$filename"
+	echo
+done
 echo "Monthly AV Scan"
 tail -n 4 /var/log/antivirus_scan-monthly.log
 echo
